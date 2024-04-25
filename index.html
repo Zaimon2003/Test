@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SA-MP Server Status</title>
+</head>
+
+<body>
+    <h1>SA-MP Server Status</h1>
+    <form id="serverStatusForm">
+        <label for="hostname">Hostname:</label>
+        <input type="text" id="hostname" name="hostname" required>
+        <label for="port">Port:</label>
+        <input type="number" id="port" name="port" required>
+        <button type="submit">Check Status</button>
+    </form>
+    <div id="serverStatus"></div>
+
+    <script>
+        document.getElementById('serverStatusForm').addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            const hostname = formData.get('hostname');
+            const port = formData.get('port');
+            const response = await fetch(`/server-status?hostname=${hostname}&port=${port}`);
+            const data = await response.json();
+            document.getElementById('serverStatus').innerHTML = `
+                <p><strong>Gamemode:</strong> ${data.gamemode}</p>
+                <p><strong>Database:</strong> ${data.database}</p>
+                <p><strong>Players Online:</strong> ${data.playersOnline}</p>
+            `;
+        });
+    </script>
+</body>
+
+</html>
